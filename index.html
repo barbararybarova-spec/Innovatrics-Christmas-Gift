@@ -605,9 +605,10 @@ const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwgoBGFsBsNHK9N8pyt9
 const GH = "https://raw.githubusercontent.com/barbararybarova-spec/Innovatrics-Christmas-Gift/main/images/";
 const img = name => GH + encodeURIComponent(name);
 
-// The gift "costs" 1 credit internally, so the sheet can stop a second order.
-// Set every person's credit to 1 in the Google Sheet. The price is never shown.
+// Every person has credit 1 in the Users sheet. The gift "costs" 1 credit,
+// so after ordering the credit drops to 0 and a second order is blocked.
 const GIFT_PRICE = 1;
+
 
 const COLOURS = { Khaki: '#4b5332', Navy: '#1f2a4d', Black: '#151515', Grey: '#8a8d91' };
 
