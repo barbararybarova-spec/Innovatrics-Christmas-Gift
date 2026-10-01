@@ -457,7 +457,7 @@
         <div class="login-card">
             <h1>Merry Christmas, Inno 🎄</h1>
             <p class="subtitle">This year's gift is a softshell jacket</p>
-            <span class="product-count-hint">Women's or men's fit, in khaki or navy</span>
+            <span class="product-count-hint">Women's or men's fit, in khaki, navy or black</span>
             <input type="email" id="user-email"
                 placeholder="your.name@innovatrics.com"
                 autocomplete="email"
@@ -511,24 +511,24 @@ const img = name => GH + encodeURIComponent(name);
 // Set every person's credit to 1 in the Google Sheet. The price is never shown.
 const GIFT_PRICE = 1;
 
-const COLOURS = { Khaki: '#4b5332', Navy: '#1f2a4d' };
+const COLOURS = { Khaki: '#4b5332', Navy: '#1f2a4d', Black: '#151515' };
 
 const PRODUCTS = [
     {
         id: 'JacketWomen',
         name: "Women's Softshell Jacket",
         sizes: ['S','M','L','XL','XXL','3XL'],
-        colours: ['Khaki','Navy'],
+        colours: ['Khaki','Navy','Black'],
         description: 'Hooded softshell jacket with zip pockets. Women\'s fit.',
-        images: [ img('Navy_colour.png') ],
-        colourImage: { Navy: 0 },
+        images: [ img('Female_Jacket_Black.png'), img('Navy_colour.png') ],
+        colourImage: { Black: 0, Navy: 1 },
         sizeChart: img('Female_size table.png'),
     },
     {
         id: 'JacketMen',
         name: "Men's Softshell Jacket",
         sizes: ['S','M','L','XL','XXL','3XL','4XL','5XL'],
-        colours: ['Khaki','Navy'],
+        colours: ['Khaki','Navy','Black'],
         description: 'Hooded softshell jacket with zip pockets. Men\'s fit.',
         images: [ img('Male_Jacket_Khaki.png'), img('Navy_colour.png') ],
         colourImage: { Khaki: 0, Navy: 1 },
