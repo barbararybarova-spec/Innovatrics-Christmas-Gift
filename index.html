@@ -429,6 +429,28 @@
         .size-chart-link:hover { color: white; }
         #lightbox img { background: white; }
         .already-msg { color: var(--text-gray); font-size: 0.85em; margin-top: 14px; line-height: 1.5; }
+    
+        /* GIFT SET */
+        .step-title { font-family: 'Fraunces', Georgia, serif; font-size: 1.4em; font-weight: 600; text-align: center; margin: 40px 0 18px; color: var(--snow); }
+        .step-title:first-of-type { margin-top: 0; }
+        .product-grid.one { grid-template-columns: minmax(280px, 370px); justify-content: center; }
+        .product-card.selected { border: 2px solid var(--gold); background: rgba(224,179,84,0.08); }
+        .product-card.selected .add-btn { background: var(--gold-soft); border-color: var(--gold); color: var(--gold); }
+        .selected-badge {
+            position: absolute; top: 10px; left: 10px; z-index: 4;
+            background: var(--gold); color: var(--pine-deep);
+            font-size: 0.72em; font-weight: 700; padding: 4px 10px; border-radius: 20px; display: none;
+        }
+        .product-card.selected .selected-badge { display: block; }
+        .review-bar { display: flex; justify-content: center; margin-top: 40px; }
+        .review-bar .btn-confirm { flex: none; padding: 15px 44px; font-size: 1.05em; }
+        #chart-modal { display: none; position: fixed; inset: 0; z-index: 650; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); align-items: center; justify-content: center; padding: 20px; }
+        #chart-modal.show { display: flex; animation: fadeIn 0.2s ease; }
+        .chart-table-wrap { overflow-x: auto; margin-bottom: 14px; }
+        .chart-table { width: 100%; border-collapse: collapse; font-size: 0.85em; }
+        .chart-table th, .chart-table td { text-align: left; padding: 10px 8px; border-bottom: 1px solid rgba(255,255,255,0.1); vertical-align: top; }
+        .chart-table th { color: var(--gold); font-weight: 600; }
+        .chart-note { font-size: 0.75em; color: var(--text-muted); line-height: 1.5; margin: 0 0 18px; }
     </style>
 </head>
 <body>
@@ -441,7 +463,7 @@
                 <span class="top-bar-name" id="bar-name">🎄</span>
                 <span class="top-bar-logout" onclick="logout()">switch user</span>
             </div>
-            <div class="gift-pill">🎁 1 jacket to pick</div>
+            <div class="gift-pill">🎁 Jacket + gloves</div>
         </div>
     </div>
 
@@ -449,15 +471,16 @@
         <div class="preview-strip" aria-hidden="true">
             <img class="preview-img" id="prev1" src="" alt="">
             <img class="preview-img" id="prev2" src="" alt="">
+            <img class="preview-img" id="prev3" src="" alt="">
             <div class="preview-teaser">
                 <strong style="color:rgba(255,255,255,0.8);">Your Christmas gift</strong>
-                Login to pick your jacket
+                Login to pick yours
             </div>
         </div>
         <div class="login-card">
             <h1>Merry Christmas, Inno 🎄</h1>
-            <p class="subtitle">This year's gift is a softshell jacket</p>
-            <span class="product-count-hint">Women's or men's fit, in khaki, navy or black</span>
+            <p class="subtitle">This year's gift is a softshell jacket and gloves</p>
+            <span class="product-count-hint">Pick your fit, colours and sizes</span>
             <input type="email" id="user-email"
                 placeholder="your.name@innovatrics.com"
                 autocomplete="email"
@@ -470,21 +493,50 @@
 
     <div id="shop-section">
         <div class="shop-header">
-            <h2>Pick your Christmas jacket ❄️</h2>
-            <p>Choose the fit, colour and size — one jacket per person</p>
+            <h2>Pick your Christmas gift ❄️</h2>
+            <p>A softshell jacket and a pair of gloves for everyone</p>
         </div>
-        <div class="product-grid two" id="product-grid"></div>
+
+        <h3 class="step-title">1. Choose your jacket</h3>
+        <div class="product-grid two" id="jacket-grid"></div>
+
+        <h3 class="step-title">2. Choose your gloves</h3>
+        <div class="product-grid one" id="gloves-grid"></div>
+
+        <div class="review-bar">
+            <button class="btn-confirm" onclick="reviewGift()">Review my gift 🎁</button>
+        </div>
     </div>
 </div>
 
 <div id="order-modal">
     <div class="modal-card">
         <h3>Confirm your gift</h3>
-        <p class="modal-sub">You can pick only one jacket, so please double-check</p>
+        <p class="modal-sub">You can confirm only once, so please double-check colours and sizes</p>
         <div class="modal-items" id="modal-items-list"></div>
         <div class="modal-actions">
             <button class="btn-cancel" onclick="closeOrderModal()">Go back</button>
-            <button class="btn-place" onclick="submitOrder()">Confirm my jacket 🎁</button>
+            <button class="btn-place" onclick="submitOrder()">Confirm my gift 🎁</button>
+        </div>
+    </div>
+</div>
+
+<div id="chart-modal" onclick="if(event.target===this) closeChart()">
+    <div class="modal-card">
+        <h3>Gloves size guide</h3>
+        <p class="modal-sub">Unisex sizes</p>
+        <div class="chart-table-wrap">
+            <table class="chart-table">
+                <thead><tr><th>Size</th><th>Hand circumference*</th><th>Typical fit</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>S/M</strong></td><td>approx. 17–21 cm</td><td>Smaller men's hands or standard women's hands</td></tr>
+                    <tr><td><strong>L/XL</strong></td><td>approx. 22–26 cm</td><td>Standard to larger men's hands</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <p class="chart-note">* Measure around your palm at its widest point, just below the knuckles, without the thumb.</p>
+        <div class="modal-actions">
+            <button class="btn-cancel" onclick="closeChart()">Close</button>
         </div>
     </div>
 </div>
@@ -492,7 +544,7 @@
 <div id="success-screen">
     <div class="success-icon">🎁</div>
     <h2>Your gift is picked!</h2>
-    <p class="success-sub">Your jacket is on its way. Baska Rybarova will let you know as soon as it arrives.</p>
+    <p class="success-sub">Your jacket and gloves are on their way. Baska Rybarova will let you know as soon as they arrive.</p>
     <p class="success-contact">Questions? Ping Baska on Google chat 📦</p>
     <div class="success-summary" id="success-summary"></div>
 </div>
@@ -511,17 +563,17 @@ const img = name => GH + encodeURIComponent(name);
 // Set every person's credit to 1 in the Google Sheet. The price is never shown.
 const GIFT_PRICE = 1;
 
-const COLOURS = { Khaki: '#4b5332', Navy: '#1f2a4d', Black: '#151515' };
+const COLOURS = { Khaki: '#4b5332', Navy: '#1f2a4d', Black: '#151515', Grey: '#8a8d91' };
 
-const PRODUCTS = [
+const JACKETS = [
     {
         id: 'JacketWomen',
         name: "Women's Softshell Jacket",
         sizes: ['S','M','L','XL','XXL','3XL'],
         colours: ['Khaki','Navy','Black'],
         description: 'Hooded softshell jacket with zip pockets. Women\'s fit.',
-        images: [ img('Female_Jacket_Black.png'), img('Navy_colour.png') ],
-        colourImage: { Black: 0, Navy: 1 },
+        images: [ img('W_K.jpg'), img('W_N.jpg'), img('W_B.jpg') ],
+        colourImage: { Khaki: 0, Navy: 1, Black: 2 },
         sizeChart: img('Female_size table.png'),
     },
     {
@@ -530,15 +582,30 @@ const PRODUCTS = [
         sizes: ['S','M','L','XL','XXL','3XL','4XL','5XL'],
         colours: ['Khaki','Navy','Black'],
         description: 'Hooded softshell jacket with zip pockets. Men\'s fit.',
-        images: [ img('Male_Jacket_Khaki.png'), img('Navy_colour.png') ],
-        colourImage: { Khaki: 0, Navy: 1 },
+        images: [ img('M_K.jpg'), img('M_N.jpg'), img('M_B.jpg') ],
+        colourImage: { Khaki: 0, Navy: 1, Black: 2 },
         sizeChart: img('Male_size table.png'),
     },
 ];
 
+const GLOVES = {
+    id: 'Gloves',
+    name: 'Gloves',
+    sizes: [
+        { value: 'S/M',  label: 'S/M (recommended for women)' },
+        { value: 'L/XL', label: 'L/XL (recommended for men)' },
+    ],
+    colours: ['Black','Grey'],
+    description: 'Warm winter gloves. Unisex.',
+    images: [ img('gloves_Black.png'), img('gloves_grey.png') ],
+    colourImage: { Black: 0, Grey: 1 },
+};
+
+const ALL = [...JACKETS, GLOVES];
 const COLOR_GOLD = '#e0b354';
 const carouselState = {};
 const chosenColour = {};
+let selectedJacket = null;
 let pending = null;
 
 // SNOWFALL
@@ -560,52 +627,77 @@ function makeSnow() {
     }
 }
 
-// RENDER PRODUCTS
+// RENDER
+function carouselHTML(p) {
+    const multi = p.images.length > 1;
+    carouselState[p.id] = 0;
+    const slides = p.images.map(url =>
+        '<img src="' + url + '" alt="' + p.name + '" onclick="openLightbox(\'' + url + '\')" draggable="false">'
+    ).join('');
+    const prev = multi ? '<button class="carousel-btn prev" onclick="carouselMove(\'' + p.id + '\',-1)" aria-label="Previous">&#8249;</button>' : '';
+    const next = multi ? '<button class="carousel-btn next" onclick="carouselMove(\'' + p.id + '\',1)" aria-label="Next">&#8250;</button>' : '';
+    const dots = multi ? '<div class="carousel-dots" id="dots_' + p.id + '">' +
+        p.images.map((_, i) => '<span class="carousel-dot' + (i===0?' active':'') + '"></span>').join('') + '</div>' : '';
+    const zoom = !multi ? '<span class="zoom-hint">🔍 zoom</span>' : '';
+    return '<div class="carousel-wrap">' + prev +
+        '<div class="carousel-track" id="track_' + p.id + '">' + slides + '</div>' +
+        next + dots + zoom + '</div>';
+}
+function swatchesHTML(p) {
+    chosenColour[p.id] = p.colours[0];
+    return '<div class="swatches" role="group" aria-label="Colour">' + p.colours.map((c, i) =>
+        '<button class="swatch" aria-pressed="' + (i===0) + '" onclick="pickColour(\'' + p.id + '\',\'' + c + '\',this)">' +
+        '<span class="dot" style="background:' + COLOURS[c] + '"></span>' + c + '</button>'
+    ).join('') + '</div>';
+}
+function sizeHTML(p) {
+    const opts = p.sizes.map(s => typeof s === 'string'
+        ? '<option value="' + s + '">' + s + '</option>'
+        : '<option value="' + s.value + '">' + s.label + '</option>').join('');
+    return '<div class="controls-row"><div style="flex:1" class="control-group"><label for="size_' + p.id + '">Size</label>' +
+        '<select id="size_' + p.id + '"><option value="">Choose size</option>' + opts + '</select></div></div>';
+}
 function renderProducts() {
-    const grid = document.getElementById('product-grid');
-    grid.innerHTML = PRODUCTS.map(p => {
-        const multi = p.images.length > 1;
-        carouselState[p.id] = 0;
-        chosenColour[p.id] = p.colours[0];
-
-        const imgSlides = p.images.map(url =>
-            '<img src="' + url + '" alt="' + p.name + '" onclick="openLightbox(\'' + url + '\')" draggable="false">'
-        ).join('');
-        const prevBtn = multi ? '<button class="carousel-btn prev" onclick="carouselMove(\'' + p.id + '\',-1)" aria-label="Previous">&#8249;</button>' : '';
-        const nextBtn = multi ? '<button class="carousel-btn next" onclick="carouselMove(\'' + p.id + '\',1)" aria-label="Next">&#8250;</button>' : '';
-        const dots = multi ? '<div class="carousel-dots" id="dots_' + p.id + '">' +
-            p.images.map((_, i) => '<span class="carousel-dot' + (i===0?' active':'') + '"></span>').join('') +
-            '</div>' : '';
-        const zoomHint = !multi ? '<span class="zoom-hint">🔍 zoom</span>' : '';
-
-        const swatches = p.colours.map((c, i) =>
-            '<button class="swatch" aria-pressed="' + (i===0) + '" onclick="pickColour(\'' + p.id + '\',\'' + c + '\',this)">' +
-            '<span class="dot" style="background:' + COLOURS[c] + '"></span>' + c + '</button>'
-        ).join('');
-        const sizeOptions = p.sizes.map(s => '<option>' + s + '</option>').join('');
-
-        return '<div class="product-card" id="card_' + p.id + '">' +
-            '<div class="carousel-wrap">' + prevBtn +
-                '<div class="carousel-track" id="track_' + p.id + '">' + imgSlides + '</div>' +
-                nextBtn + dots + zoomHint +
-            '</div>' +
+    document.getElementById('jacket-grid').innerHTML = JACKETS.map(p =>
+        '<div class="product-card" id="card_' + p.id + '">' +
+            '<span class="selected-badge">✓ Your jacket</span>' +
+            carouselHTML(p) +
             '<div class="product-details">' +
                 '<h3>' + p.name + '</h3>' +
                 '<p class="product-desc">' + p.description + '</p>' +
-                '<div class="swatches" role="group" aria-label="Colour">' + swatches + '</div>' +
-                '<div class="controls-row"><div style="flex:1" class="control-group"><label for="size_' + p.id + '">Size</label>' +
-                '<select id="size_' + p.id + '"><option value="">Choose size</option>' + sizeOptions + '</select></div></div>' +
+                swatchesHTML(p) + sizeHTML(p) +
                 '<button class="size-chart-link" onclick="openLightbox(\'' + p.sizeChart + '\')">📏 Size chart (cm)</button>' +
-                '<button class="add-btn" onclick="chooseGift(\'' + p.id + '\')">Choose this jacket 🎁</button>' +
+                '<button class="add-btn" id="btn_' + p.id + '" onclick="selectJacket(\'' + p.id + '\')">Select this jacket</button>' +
+            '</div>' +
+        '</div>'
+    ).join('');
+
+    const g = GLOVES;
+    document.getElementById('gloves-grid').innerHTML =
+        '<div class="product-card" id="card_' + g.id + '">' +
+            carouselHTML(g) +
+            '<div class="product-details">' +
+                '<h3>' + g.name + '</h3>' +
+                '<p class="product-desc">' + g.description + '</p>' +
+                swatchesHTML(g) + sizeHTML(g) +
+                '<button class="size-chart-link" onclick="openChart()">📏 Size guide</button>' +
             '</div>' +
         '</div>';
-    }).join('');
+}
+
+function selectJacket(id) {
+    selectedJacket = id;
+    JACKETS.forEach(j => {
+        const on = j.id === id;
+        document.getElementById('card_' + j.id).classList.toggle('selected', on);
+        document.getElementById('btn_' + j.id).textContent = on ? '✓ Selected' : 'Select this jacket';
+    });
 }
 
 function pickColour(id, colour, el) {
     chosenColour[id] = colour;
     el.parentElement.querySelectorAll('.swatch').forEach(s => s.setAttribute('aria-pressed', s === el));
-    const p = PRODUCTS.find(x => x.id === id);
+    const p = ALL.find(x => x.id === id);
     if (p.colourImage[colour] !== undefined) carouselGo(id, p.colourImage[colour]);
 }
 
@@ -616,7 +708,7 @@ function carouselGo(id, idx) {
     document.querySelectorAll('#dots_' + id + ' .carousel-dot').forEach((d, i) => d.classList.toggle('active', i === idx));
 }
 function carouselMove(id, dir) {
-    const count = PRODUCTS.find(p => p.id === id).images.length;
+    const count = ALL.find(p => p.id === id).images.length;
     carouselGo(id, (carouselState[id] + dir + count) % count);
 }
 
@@ -629,22 +721,25 @@ function showToast(msg) {
     setTimeout(() => t.remove(), 3200);
 }
 
-// LIGHTBOX
+// LIGHTBOX + SIZE GUIDE
 function openLightbox(src) {
     document.getElementById('lightbox-img').src = src;
     document.getElementById('lightbox').style.display = 'flex';
 }
 function closeLightbox() { document.getElementById('lightbox').style.display = 'none'; }
+function openChart() { document.getElementById('chart-modal').classList.add('show'); }
+function closeChart() { document.getElementById('chart-modal').classList.remove('show'); }
 document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') { closeLightbox(); closeOrderModal(); }
+    if (e.key === 'Escape') { closeLightbox(); closeOrderModal(); closeChart(); }
 });
 
 // LOGIN
 window.onload = function() {
     makeSnow();
     renderProducts();
-    document.getElementById('prev1').src = img('Male_Jacket_Khaki.png');
-    document.getElementById('prev2').src = img('Navy_colour.png');
+    document.getElementById('prev1').src = img('M_K.jpg');
+    document.getElementById('prev2').src = img('W_N.jpg');
+    document.getElementById('prev3').src = img('gloves_Black.png');
     const saved = localStorage.getItem('userEmail');
     if (saved) { document.getElementById('user-email').value = saved; checkBalance(); }
 };
@@ -669,7 +764,7 @@ function checkBalance() {
             localStorage.setItem('userEmail', email);
             if (Number(data.credit) < GIFT_PRICE) {
                 document.getElementById('login-error').innerHTML =
-                    '<div class="already-msg">🎁 You have already picked your Christmas jacket.<br>Need to change it? Ping Baska on Google chat.</div>';
+                    '<div class="already-msg">🎁 You have already picked your Christmas gift.<br>Need to change it? Ping Baska on Google chat.</div>';
                 return;
             }
             const firstName = data.name.includes(',') ? data.name.split(',')[1].trim() : data.name;
@@ -692,45 +787,57 @@ function logout() {
     location.reload();
 }
 
-// CHOOSE + CONFIRM
-function chooseGift(id) {
-    const p = PRODUCTS.find(x => x.id === id);
-    const size = document.getElementById('size_' + id).value;
-    if (!size) { showToast('📏 Please choose your size first'); document.getElementById('size_' + id).focus(); return; }
-    pending = { name: p.name, colour: chosenColour[id], size };
-    document.getElementById('modal-items-list').innerHTML =
-        '<div class="modal-item-row"><span class="mname">Jacket</span><span class="mprice">' + p.name + '</span></div>' +
-        '<div class="modal-item-row"><span class="mname">Colour</span><span class="mprice">' + pending.colour + '</span></div>' +
-        '<div class="modal-item-row"><span class="mname">Size</span><span class="mprice">' + pending.size + '</span></div>';
+// REVIEW + CONFIRM
+function scrollToCard(id) { document.getElementById('card_' + id).scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+function reviewGift() {
+    if (!selectedJacket) { showToast("🧥 Select the women's or men's jacket first"); scrollToCard(JACKETS[0].id); return; }
+    const j = JACKETS.find(x => x.id === selectedJacket);
+    const jSize = document.getElementById('size_' + j.id).value;
+    if (!jSize) { showToast('📏 Choose your jacket size'); scrollToCard(j.id); return; }
+    const gSize = document.getElementById('size_' + GLOVES.id).value;
+    if (!gSize) { showToast('🧤 Choose your gloves size'); scrollToCard(GLOVES.id); return; }
+
+    pending = {
+        jacket: j.name, jColour: chosenColour[j.id], jSize,
+        gColour: chosenColour[GLOVES.id], gSize,
+    };
+    document.getElementById('modal-items-list').innerHTML = summaryRows(pending);
     document.getElementById('order-modal').classList.add('show');
+}
+function summaryRows(s, rowClass) {
+    const rows = [
+        ['Jacket', s.jacket], ['Jacket colour', s.jColour], ['Jacket size', s.jSize],
+        ['Gloves colour', s.gColour], ['Gloves size', s.gSize],
+    ];
+    return rows.map(r => rowClass === 'ss'
+        ? '<div class="ss-row"><span class="ss-label">' + r[0] + '</span><span class="ss-val">' + r[1] + '</span></div>'
+        : '<div class="modal-item-row"><span class="mname">' + r[0] + '</span><span class="mprice">' + r[1] + '</span></div>'
+    ).join('');
 }
 function closeOrderModal() { document.getElementById('order-modal').classList.remove('show'); }
 
 function submitOrder() {
     if (!pending) return;
     const email = localStorage.getItem('userEmail');
-    const details = '1x ' + pending.name + ' (' + pending.colour + ', ' + pending.size + ')';
+    const p = pending;
+    const details = '1x ' + p.jacket + ' (' + p.jColour + ', ' + p.jSize + '), 1x Gloves (' + p.gColour + ', ' + p.gSize + ')';
     const btn = document.querySelector('.btn-place');
     btn.disabled = true; btn.textContent = '⏳ Sending...';
     fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ email, item: details, price: GIFT_PRICE }) })
         .then(r => r.text())
         .then(res => {
-            btn.disabled = false; btn.textContent = 'Confirm my jacket 🎁';
+            btn.disabled = false; btn.textContent = 'Confirm my gift 🎁';
             if (res === "SUCCESS") { closeOrderModal(); showSuccessScreen(); }
             else { showToast('❌ Error: ' + res); }
         })
         .catch(() => {
-            btn.disabled = false; btn.textContent = 'Confirm my jacket 🎁';
+            btn.disabled = false; btn.textContent = 'Confirm my gift 🎁';
             showToast('❌ Connection error. Try again.');
         });
 }
 
 function showSuccessScreen() {
-    const s = pending;
-    document.getElementById('success-summary').innerHTML =
-        '<div class="ss-row"><span class="ss-label">Jacket</span><span class="ss-val">' + s.name + '</span></div>' +
-        '<div class="ss-row"><span class="ss-label">Colour</span><span class="ss-val">' + s.colour + '</span></div>' +
-        '<div class="ss-row"><span class="ss-label">Size</span><span class="ss-val" style="color:' + COLOR_GOLD + ';">' + s.size + '</span></div>';
+    document.getElementById('success-summary').innerHTML = summaryRows(pending, 'ss');
     document.getElementById('success-screen').classList.add('show');
 }
 </script>
