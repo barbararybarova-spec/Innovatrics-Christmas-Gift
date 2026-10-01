@@ -475,6 +475,17 @@
 
         /* keep jacket cards aligned: description always reserves 2 lines */
         #jacket-grid .product-desc { min-height: 3em; display: flex; align-items: flex-start; justify-content: center; }
+
+        /* DELIVERY INFO */
+        #success-screen { overflow-y: auto; justify-content: flex-start; padding-top: 50px; padding-bottom: 50px; }
+        #success-screen > * { flex-shrink: 0; }
+        .delivery-info { display: grid; gap: 12px; width: 100%; max-width: 520px; margin: 10px 0 24px; text-align: left; }
+        .delivery-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(224,179,84,0.25); border-left: 3px solid var(--gold); border-radius: 12px; padding: 14px 18px; }
+        .delivery-card h4 { margin: 0 0 6px; font-size: 0.95em; color: var(--gold); }
+        .delivery-card p { margin: 0; font-size: 0.85em; line-height: 1.6; color: rgba(255,255,255,0.8); }
+        .delivery-card .delivery-note { margin-top: 8px; font-size: 0.78em; color: var(--text-muted); }
+        .success-summary { margin-bottom: 18px; }
+        .success-contact { margin-bottom: 0; }
     </style>
 </head>
 <body>
@@ -568,9 +579,20 @@
 <div id="success-screen">
     <div class="success-icon">🎁</div>
     <h2>Your gift is picked!</h2>
-    <p class="success-sub">Your jacket and gloves are on their way. Baska Rybarova will let you know as soon as they arrive.</p>
-    <p class="success-contact">Questions? Ping Baska on Google chat 📦</p>
+    <p class="success-sub">Thank you! Here's how your jacket and gloves will reach you:</p>
+    <div class="delivery-info">
+        <div class="delivery-card">
+            <h4>🇸🇰 🇨🇿 SK &amp; CZ team members</h4>
+            <p>Your gift will be sent by courier to your home address. Please check that your mailing address in <strong>BambooHR</strong> is up to date.</p>
+            <p class="delivery-note">Address updates need approval and won't show up immediately, so please don't submit the request more than once.</p>
+        </div>
+        <div class="delivery-card">
+            <h4>🌍 Remote team members</h4>
+            <p>Depending on your location and country-specific shipping restrictions, we'll arrange your delivery individually. You can pick up your gift when you visit the Bratislava office, or coordinate with colleagues travelling your way for client or exhibition visits.</p>
+        </div>
+    </div>
     <div class="success-summary" id="success-summary"></div>
+    <p class="success-contact">Questions? Ping Baska on Google chat 📦</p>
 </div>
 
 <div id="lightbox" onclick="closeLightbox()">
