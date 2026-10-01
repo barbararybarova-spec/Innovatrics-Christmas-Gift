@@ -451,6 +451,27 @@
         .chart-table th, .chart-table td { text-align: left; padding: 10px 8px; border-bottom: 1px solid rgba(255,255,255,0.1); vertical-align: top; }
         .chart-table th { color: var(--gold); font-weight: 600; }
         .chart-note { font-size: 0.75em; color: var(--text-muted); line-height: 1.5; margin: 0 0 18px; }
+
+        /* JACKET INFO BOX */
+        .info-box {
+            width: 100%; text-align: left; margin: -4px 0 16px;
+            background: rgba(0,0,0,0.2); border: 1px solid rgba(224,179,84,0.25);
+            border-radius: 10px; font-size: 0.78em;
+        }
+        .info-box summary {
+            cursor: pointer; list-style: none; padding: 10px 14px;
+            font-weight: 600; color: var(--gold);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .info-box summary::-webkit-details-marker { display: none; }
+        .info-box summary::after { content: '+'; font-size: 1.3em; line-height: 1; }
+        .info-box[open] summary::after { content: '−'; }
+        .info-body { padding: 0 14px 14px; color: rgba(255,255,255,0.75); line-height: 1.55; }
+        .info-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+        .info-chip { background: var(--gold-soft); color: var(--gold); border-radius: 20px; padding: 3px 9px; font-weight: 600; font-size: 0.92em; }
+        .info-body h4 { margin: 10px 0 4px; font-size: 1em; color: white; font-weight: 600; }
+        .info-body ul { margin: 0; padding-left: 18px; }
+        .info-body li { margin: 2px 0; }
     </style>
 </head>
 <body>
@@ -601,6 +622,37 @@ const GLOVES = {
     colourImage: { Black: 0, Grey: 1 },
 };
 
+
+const JACKET_INFO =
+    '<details class="info-box"><summary>Jacket details</summary><div class="info-body">' +
+        '<div class="info-chips">' +
+            '<span class="info-chip">💧 8,000 mm water column</span>' +
+            '<span class="info-chip">🌬️ Windproof</span>' +
+            '<span class="info-chip">🌡️ Fleece-lined</span>' +
+        '</div>' +
+        '<h4>Material</h4><ul>' +
+            '<li>440 g/m²</li>' +
+            '<li>Outer: 95% polyester, 5% elastane</li>' +
+            '<li>Inner: 100% polyester</li>' +
+            '<li>Bi-stretch softshell bonded with fleece</li>' +
+        '</ul>' +
+        '<h4>Protection</h4><ul>' +
+            '<li>Water-repellent (8,000 mm water column)</li>' +
+            '<li>Waterproof zips, taped seams</li>' +
+            '<li>Windproof and breathable</li>' +
+            '<li>Reflective piping and zip puller</li>' +
+        '</ul>' +
+        '<h4>Features</h4><ul>' +
+            '<li>Detachable hood, chin guard</li>' +
+            '<li>Adjustable cuffs with hook-and-loop fastening</li>' +
+            '<li>Drawcord channel at the hem with inside stopper</li>' +
+            '<li>Rounded, extended back; panel seams</li>' +
+            '<li>Pockets: 1 sleeve pocket, 1 chest pocket, 2 zipped side pockets</li>' +
+            '<li>Key holder sewn into the side pocket</li>' +
+            '<li>Neutral size label</li>' +
+        '</ul>' +
+        '<h4>Care</h4><ul><li>Machine washable at 30 °C</li></ul>' +
+    '</div></details>';
 const ALL = [...JACKETS, GLOVES];
 const COLOR_GOLD = '#e0b354';
 const carouselState = {};
@@ -665,6 +717,7 @@ function renderProducts() {
             '<div class="product-details">' +
                 '<h3>' + p.name + '</h3>' +
                 '<p class="product-desc">' + p.description + '</p>' +
+                JACKET_INFO +
                 swatchesHTML(p) + sizeHTML(p) +
                 '<button class="size-chart-link" onclick="openLightbox(\'' + p.sizeChart + '\')">📏 Size chart (cm)</button>' +
                 '<button class="add-btn" id="btn_' + p.id + '" onclick="selectJacket(\'' + p.id + '\')">Select this jacket</button>' +
@@ -820,7 +873,8 @@ function submitOrder() {
     if (!pending) return;
     const email = localStorage.getItem('userEmail');
     const p = pending;
-    const details = '1x ' + p.jacket + ' (' + p.jColour + ', ' + p.jSize + '), 1x Gloves (' + p.gColour + ', ' + p.gSize + ')';
+    // Items are separated by ", " (the sheet splits on it), so colour and size use " / "
+    const details = '1x ' + p.jacket + ' (' + p.jColour + ' / ' + p.jSize + '), 1x Gloves (' + p.gColour + ' / ' + p.gSize + ')';
     const btn = document.querySelector('.btn-place');
     btn.disabled = true; btn.textContent = '⏳ Sending...';
     fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ email, item: details, price: GIFT_PRICE }) })
