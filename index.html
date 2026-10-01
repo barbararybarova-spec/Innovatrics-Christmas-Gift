@@ -472,6 +472,9 @@
         .info-body h4 { margin: 10px 0 4px; font-size: 1em; color: white; font-weight: 600; }
         .info-body ul { margin: 0; padding-left: 18px; }
         .info-body li { margin: 2px 0; }
+
+        /* keep jacket cards aligned: description always reserves 2 lines */
+        #jacket-grid .product-desc { min-height: 3em; display: flex; align-items: flex-start; justify-content: center; }
     </style>
 </head>
 <body>
@@ -617,7 +620,7 @@ const GLOVES = {
         { value: 'L/XL', label: 'L/XL (recommended for men)' },
     ],
     colours: ['Black','Grey'],
-    description: 'Warm winter gloves. Unisex.',
+    description: 'Softshell gloves. Unisex.',
     images: [ img('gloves_Black.png'), img('gloves_grey.png') ],
     colourImage: { Black: 0, Grey: 1 },
 };
@@ -652,6 +655,24 @@ const JACKET_INFO =
             '<li>Neutral size label</li>' +
         '</ul>' +
         '<h4>Care</h4><ul><li>Machine washable at 30 °C</li></ul>' +
+    '</div></details>';
+
+const GLOVES_INFO =
+    '<details class="info-box"><summary>Gloves details</summary><div class="info-body">' +
+        '<div class="info-chips">' +
+            '<span class="info-chip">📱 Touchscreen compatible</span>' +
+            '<span class="info-chip">🌬️ Windproof</span>' +
+        '</div>' +
+        '<h4>Material</h4><ul>' +
+            '<li>93% polyester, 7% elastane</li>' +
+            '<li>Breathable softshell</li>' +
+        '</ul>' +
+        '<h4>Features</h4><ul>' +
+            '<li>Ergonomic fit</li>' +
+            '<li>Lightweight and quick-drying</li>' +
+            '<li>Wind-resistant material</li>' +
+            '<li>Touchscreen compatible</li>' +
+        '</ul>' +
     '</div></details>';
 const ALL = [...JACKETS, GLOVES];
 const COLOR_GOLD = '#e0b354';
@@ -732,6 +753,7 @@ function renderProducts() {
             '<div class="product-details">' +
                 '<h3>' + g.name + '</h3>' +
                 '<p class="product-desc">' + g.description + '</p>' +
+                GLOVES_INFO +
                 swatchesHTML(g) + sizeHTML(g) +
                 '<button class="size-chart-link" onclick="openChart()">📏 Size guide</button>' +
             '</div>' +
