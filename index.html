@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Innovatrics Christmas Gift Store</title>
+    <title>Innovatrics Christmas Gift</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -401,6 +401,34 @@
             .top-bar-inner { gap: 10px; }
             .credits-pill .label { display: none; }
         }
+    
+        /* GIFT PICKER */
+        .gift-pill {
+            display: flex; align-items: center; gap: 8px;
+            background: var(--gold-soft); border: 1px solid rgba(224,179,84,0.35);
+            border-radius: 30px; padding: 7px 16px; font-size: 0.85em; font-weight: 600; color: var(--gold);
+        }
+        .product-grid.two { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); max-width: 760px; margin: 0 auto; }
+        .carousel-track img { height: 340px; object-position: top; }
+        .swatches { display: flex; gap: 8px; justify-content: center; margin-bottom: 14px; }
+        .swatch {
+            font-family: 'Montserrat', sans-serif;
+            display: flex; align-items: center; gap: 7px;
+            background: var(--input-bg); border: 1px solid var(--input-border);
+            color: white; border-radius: 20px; padding: 6px 12px 6px 7px;
+            font-size: 0.82em; font-weight: 600; cursor: pointer;
+            transition: border-color 0.15s, background 0.15s;
+        }
+        .swatch .dot { width: 16px; height: 16px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.6); }
+        .swatch[aria-pressed="true"] { border-color: var(--gold); background: var(--gold-soft); }
+        .size-chart-link {
+            background: none; border: none; color: var(--text-muted);
+            font-family: 'Montserrat', sans-serif; font-size: 0.75em;
+            text-decoration: underline; cursor: pointer; margin: -6px 0 14px;
+        }
+        .size-chart-link:hover { color: white; }
+        #lightbox img { background: white; }
+        .already-msg { color: var(--text-gray); font-size: 0.85em; margin-top: 14px; line-height: 1.5; }
     </style>
 </head>
 <body>
@@ -413,39 +441,23 @@
                 <span class="top-bar-name" id="bar-name">🎄</span>
                 <span class="top-bar-logout" onclick="logout()">switch user</span>
             </div>
-            <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
-                <div class="credits-pill">
-                    <span class="label">credits</span>
-                    <span class="used" id="bar-used">0</span>
-                    <span class="sep">/</span>
-                    <span class="total" id="bar-total">70</span>
-                    <div class="credits-bar-wrap">
-                        <div class="credits-bar-fill" id="bar-fill" style="width:100%"></div>
-                    </div>
-                </div>
-                <div class="cart-pill" onclick="openCart()">
-                    <span>🎁</span>
-                    <span id="cart-pill-label">Cart</span>
-                    <span class="cart-count" id="cart-count-badge" style="display:none">0</span>
-                </div>
-            </div>
+            <div class="gift-pill">🎁 1 jacket to pick</div>
         </div>
     </div>
 
     <div id="login-wrap">
         <div class="preview-strip" aria-hidden="true">
-            <img class="preview-img" src="https://raw.githubusercontent.com/barbararybarova-spec/Innovatrics-Merch/main/images/hoodie.jpeg" alt="">
-            <img class="preview-img" src="https://raw.githubusercontent.com/barbararybarova-spec/Innovatrics-Merch/main/images/tshirt_cotton.png" alt="">
-            <img class="preview-img" src="https://raw.githubusercontent.com/barbararybarova-spec/Innovatrics-Merch/main/images/sport_cap.png" alt="">
+            <img class="preview-img" id="prev1" src="" alt="">
+            <img class="preview-img" id="prev2" src="" alt="">
             <div class="preview-teaser">
-                <strong style="color:rgba(255,255,255,0.8);">6 items available</strong>
-                Login to start shopping
+                <strong style="color:rgba(255,255,255,0.8);">Your Christmas gift</strong>
+                Login to pick your jacket
             </div>
         </div>
         <div class="login-card">
             <h1>Merry Christmas, Inno 🎄</h1>
-            <p class="subtitle">Welcome to the Inno Christmas gift store</p>
-            <span class="product-count-hint">Softsheel jacket and softshell gloves</span>
+            <p class="subtitle">This year's gift is a softshell jacket</p>
+            <span class="product-count-hint">Women's or men's fit, in khaki or navy</span>
             <input type="email" id="user-email"
                 placeholder="your.name@innovatrics.com"
                 autocomplete="email"
@@ -458,56 +470,31 @@
 
     <div id="shop-section">
         <div class="shop-header">
-            <h2>Inno Christmas shop ❄️</h2>
-            <p>Pick what you love — 70 credits to spend</p>
+            <h2>Pick your Christmas jacket ❄️</h2>
+            <p>Choose the fit, colour and size — one jacket per person</p>
         </div>
-        <div class="product-grid" id="product-grid"></div>
-    </div>
-</div>
-
-<div id="cart-overlay" onclick="closeCart()"></div>
-<div id="cart-drawer">
-    <div class="drawer-header">
-        <h3>🎁 Shopping Cart</h3>
-        <button class="drawer-close" onclick="closeCart()">&#x2715;</button>
-    </div>
-    <div class="drawer-items" id="drawer-items"></div>
-    <div class="drawer-footer">
-        <div class="drawer-totals">
-            <span class="label">Total</span>
-            <span class="value" id="drawer-total">0 Credits</span>
-        </div>
-        <div class="remaining-line" id="remaining-line"></div>
-        <div class="drawer-actions">
-            <button class="btn-clear" onclick="clearCart()">Clear</button>
-            <button class="btn-confirm" id="btn-confirm" onclick="openOrderModal()">Confirm Order ✅</button>
-        </div>
+        <div class="product-grid two" id="product-grid"></div>
     </div>
 </div>
 
 <div id="order-modal">
     <div class="modal-card">
-        <h3>Confirm your order</h3>
-        <p class="modal-sub">Please review before placing</p>
+        <h3>Confirm your gift</h3>
+        <p class="modal-sub">You can pick only one jacket, so please double-check</p>
         <div class="modal-items" id="modal-items-list"></div>
-        <div class="modal-total-row">
-            <span>Total cost</span>
-            <span class="mval" id="modal-total-val"></span>
-        </div>
         <div class="modal-actions">
             <button class="btn-cancel" onclick="closeOrderModal()">Go back</button>
-            <button class="btn-place" onclick="submitOrder()">Place Order 🎁</button>
+            <button class="btn-place" onclick="submitOrder()">Confirm my jacket 🎁</button>
         </div>
     </div>
 </div>
 
 <div id="success-screen">
     <div class="success-icon">🎁</div>
-    <h2>Order placed!</h2>
-    <p class="success-sub">Your Christmas gift is on its way. Baska Rybarova will let you know as soon as it arrives.</p>
+    <h2>Your gift is picked!</h2>
+    <p class="success-sub">Your jacket is on its way. Baska Rybarova will let you know as soon as it arrives.</p>
     <p class="success-contact">Questions? Ping Baska on Google chat 📦</p>
     <div class="success-summary" id="success-summary"></div>
-    <button class="btn-back-shop" onclick="closeSuccessScreen()">Back to Shop</button>
 </div>
 
 <div id="lightbox" onclick="closeLightbox()">
@@ -517,86 +504,42 @@
 
 <script>
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwgoBGFsBsNHK9N8pyt9qPU2CgazbfA-YPtSyya_aAIHygBYUaSZ1Sv_ZQ7i2G4nkM/exec";
-const BUDGET = 70;
-const GH = "https://raw.githubusercontent.com/barbararybarova-spec/Innovatrics-Merch/main/images/";
+const GH = "https://raw.githubusercontent.com/barbararybarova-spec/Innovatrics-Christmas-Gift/main/images/";
+const img = name => GH + encodeURIComponent(name);
+
+// The gift "costs" 1 credit internally, so the sheet can stop a second order.
+// Set every person's credit to 1 in the Google Sheet. The price is never shown.
+const GIFT_PRICE = 1;
+
+const COLOURS = { Khaki: '#4b5332', Navy: '#1f2a4d' };
 
 const PRODUCTS = [
     {
-        id: 'Hoodie',
-        name: 'Hoodie',
-        price: 40,
-        sizes: ['XXS','XS','S','M','L','XL', 'XXL'],
-        badge: 'embroidery',
-        description: 'Back by popular demand — our legendary hoodie returns 🎉 Unisex fit. Embroidered logo.',
-        images: [
-            GH + 'hoodie.jpeg',
-        ]
+        id: 'JacketWomen',
+        name: "Women's Softshell Jacket",
+        sizes: ['S','M','L','XL','XXL','3XL'],
+        colours: ['Khaki','Navy'],
+        description: 'Hooded softshell jacket with zip pockets. Women\'s fit.',
+        images: [ img('Navy_colour.png') ],
+        colourImage: { Navy: 0 },
+        sizeChart: img('Female_size table.png'),
     },
     {
-        id: 'TShirtCotton',
-        name: 'T-Shirt Cotton',
-        price: 10,
-        sizes: ['XS','S','M','L','XL','XXL'],
-        badge: 'printed',
-        description: 'Missing our robotic dog? Now you can wear it on your chest 🐕 Unisex fit. Printed.',
-        images: [
-            GH + 'tshirt_cotton.png',
-            GH + 'tshirt_cotton_detail.png',
-        ]
-    },
-    {
-        id: 'TShirtSport',
-        name: 'T-Shirt Sport',
-        price: 10,
-        sizes: ['XS','S','M','L','XL', 'XXL'],
-        badge: 'printed',
-        description: 'This sport tee is here to transform the office human into a real athlete 💪 Unisex fit. Printed.',
-        images: [
-            GH + 'tshirt_sport.png',
-        ]
-    },
-    {
-        id: 'NeckTubeBioCotton',
-        name: 'Neck Tube — Bio Cotton',
-        price: 8,
-        sizes: ['One-size'],
-        badge: 'printed',
-        description: 'Multifunctional sports neck tube made from bio cotton. Wear it your way.',
-        images: [
-            GH + 'neck_tube_biocotton.png',
-        ]
-    },
-    {
-        id: 'NeckTubeMerino',
-        name: 'Neck Tube — Merino',
-        price: 20,
-        sizes: ['One-size'],
-        badge: 'embroidery',
-        description: '100% merino wool neck tube. Natural, warm and breathable. Embroidered.',
-        images: [
-            GH + 'neck_tube_merino.png',
-        ]
-    },
-    {
-        id: 'SportCap',
-        name: 'Sport Cap',
-        price: 12,
-        sizes: ['One-size'],
-        badge: 'printed',
-        description: 'When your brain is overheating from Claude, give it some fresh air 🧢 Printed.',
-        images: [
-            GH + 'sport_cap.png',
-        ]
+        id: 'JacketMen',
+        name: "Men's Softshell Jacket",
+        sizes: ['S','M','L','XL','XXL','3XL','4XL','5XL'],
+        colours: ['Khaki','Navy'],
+        description: 'Hooded softshell jacket with zip pockets. Men\'s fit.',
+        images: [ img('Male_Jacket_Khaki.png'), img('Navy_colour.png') ],
+        colourImage: { Khaki: 0, Navy: 1 },
+        sizeChart: img('Male_size table.png'),
     },
 ];
 
-// Christmas colors used from JavaScript
-const COLOR_OK = '#3fa266', COLOR_WARN = '#f59e0b', COLOR_DANGER = '#ef4444', COLOR_GOLD = '#e0b354';
-
+const COLOR_GOLD = '#e0b354';
 const carouselState = {};
-let cart = [];
-let currentBalance = 0;
-let lastOrderSummary = null;
+const chosenColour = {};
+let pending = null;
 
 // SNOWFALL
 function makeSnow() {
@@ -622,57 +565,59 @@ function renderProducts() {
     const grid = document.getElementById('product-grid');
     grid.innerHTML = PRODUCTS.map(p => {
         const multi = p.images.length > 1;
-        const sizeOptions = p.sizes.map(s => '<option>' + s + '</option>').join('');
         carouselState[p.id] = 0;
+        chosenColour[p.id] = p.colours[0];
 
         const imgSlides = p.images.map(url =>
             '<img src="' + url + '" alt="' + p.name + '" onclick="openLightbox(\'' + url + '\')" draggable="false">'
         ).join('');
-
         const prevBtn = multi ? '<button class="carousel-btn prev" onclick="carouselMove(\'' + p.id + '\',-1)" aria-label="Previous">&#8249;</button>' : '';
         const nextBtn = multi ? '<button class="carousel-btn next" onclick="carouselMove(\'' + p.id + '\',1)" aria-label="Next">&#8250;</button>' : '';
         const dots = multi ? '<div class="carousel-dots" id="dots_' + p.id + '">' +
             p.images.map((_, i) => '<span class="carousel-dot' + (i===0?' active':'') + '"></span>').join('') +
             '</div>' : '';
         const zoomHint = !multi ? '<span class="zoom-hint">🔍 zoom</span>' : '';
-        const badgeHTML = p.badge ? '<span class="product-badge">' + p.badge + '</span>' : '';
-        const descHTML = p.description ? '<p class="product-desc">' + p.description + '</p>' : '';
+
+        const swatches = p.colours.map((c, i) =>
+            '<button class="swatch" aria-pressed="' + (i===0) + '" onclick="pickColour(\'' + p.id + '\',\'' + c + '\',this)">' +
+            '<span class="dot" style="background:' + COLOURS[c] + '"></span>' + c + '</button>'
+        ).join('');
+        const sizeOptions = p.sizes.map(s => '<option>' + s + '</option>').join('');
 
         return '<div class="product-card" id="card_' + p.id + '">' +
-            '<span class="in-cart-badge" id="badge_' + p.id + '"></span>' +
-            '<div class="carousel-wrap">' +
-                prevBtn +
+            '<div class="carousel-wrap">' + prevBtn +
                 '<div class="carousel-track" id="track_' + p.id + '">' + imgSlides + '</div>' +
                 nextBtn + dots + zoomHint +
             '</div>' +
             '<div class="product-details">' +
                 '<h3>' + p.name + '</h3>' +
-                badgeHTML +
-                '<p class="price-tag">' + p.price + ' Credits</p>' +
-                descHTML +
-                '<div class="controls-row">' +
-                    '<div style="flex:3" class="control-group"><label>Size</label>' +
-                    '<select id="size_' + p.id + '">' + sizeOptions + '</select></div>' +
-                    '<div style="flex:2" class="control-group"><label>Qty</label>' +
-                    '<div class="qty-stepper">' +
-                        '<button onclick="stepQty(\'qty_' + p.id + '\',-1)">&#8722;</button>' +
-                        '<input type="number" id="qty_' + p.id + '" value="1" min="1" max="10">' +
-                        '<button onclick="stepQty(\'qty_' + p.id + '\',1)">+</button>' +
-                    '</div></div>' +
-                '</div>' +
-                '<button class="add-btn" id="btn_' + p.id + '" onclick="addToCart(\'' + p.id + '\',' + p.price + ',\'' + p.name + '\')">Add to Cart 🎁</button>' +
+                '<p class="product-desc">' + p.description + '</p>' +
+                '<div class="swatches" role="group" aria-label="Colour">' + swatches + '</div>' +
+                '<div class="controls-row"><div style="flex:1" class="control-group"><label for="size_' + p.id + '">Size</label>' +
+                '<select id="size_' + p.id + '"><option value="">Choose size</option>' + sizeOptions + '</select></div></div>' +
+                '<button class="size-chart-link" onclick="openLightbox(\'' + p.sizeChart + '\')">📏 Size chart (cm)</button>' +
+                '<button class="add-btn" onclick="chooseGift(\'' + p.id + '\')">Choose this jacket 🎁</button>' +
             '</div>' +
         '</div>';
     }).join('');
 }
 
+function pickColour(id, colour, el) {
+    chosenColour[id] = colour;
+    el.parentElement.querySelectorAll('.swatch').forEach(s => s.setAttribute('aria-pressed', s === el));
+    const p = PRODUCTS.find(x => x.id === id);
+    if (p.colourImage[colour] !== undefined) carouselGo(id, p.colourImage[colour]);
+}
+
 // CAROUSEL
-function carouselMove(id, dir) {
-    const count = PRODUCTS.find(p => p.id === id).images.length;
-    carouselState[id] = (carouselState[id] + dir + count) % count;
-    const idx = carouselState[id];
+function carouselGo(id, idx) {
+    carouselState[id] = idx;
     document.getElementById('track_' + id).style.transform = 'translateX(-' + (idx * 100) + '%)';
     document.querySelectorAll('#dots_' + id + ' .carousel-dot').forEach((d, i) => d.classList.toggle('active', i === idx));
+}
+function carouselMove(id, dir) {
+    const count = PRODUCTS.find(p => p.id === id).images.length;
+    carouselGo(id, (carouselState[id] + dir + count) % count);
 }
 
 // UTILS
@@ -682,10 +627,6 @@ function showToast(msg) {
     t.className = 'toast'; t.textContent = msg;
     document.body.appendChild(t);
     setTimeout(() => t.remove(), 3200);
-}
-function stepQty(id, delta) {
-    const el = document.getElementById(id);
-    el.value = Math.max(1, Math.min(10, (parseInt(el.value) || 1) + delta));
 }
 
 // LIGHTBOX
@@ -702,6 +643,8 @@ document.addEventListener('keydown', e => {
 window.onload = function() {
     makeSnow();
     renderProducts();
+    document.getElementById('prev1').src = img('Male_Jacket_Khaki.png');
+    document.getElementById('prev2').src = img('Navy_colour.png');
     const saved = localStorage.getItem('userEmail');
     if (saved) { document.getElementById('user-email').value = saved; checkBalance(); }
 };
@@ -719,26 +662,29 @@ function checkBalance() {
         .then(r => r.json())
         .then(data => {
             setLoginLoading(false);
-            if (data) {
-                localStorage.setItem('userEmail', email);
-                currentBalance = data.credit;
-                let firstName = data.name.includes(',') ? data.name.split(',')[1].trim() : data.name;
-                showShop(firstName, data.credit);
-            } else {
+            if (!data) {
                 document.getElementById('login-error').textContent = '❌ User not found. Check your email.';
+                return;
             }
+            localStorage.setItem('userEmail', email);
+            if (Number(data.credit) < GIFT_PRICE) {
+                document.getElementById('login-error').innerHTML =
+                    '<div class="already-msg">🎁 You have already picked your Christmas jacket.<br>Need to change it? Ping Baska on Google chat.</div>';
+                return;
+            }
+            const firstName = data.name.includes(',') ? data.name.split(',')[1].trim() : data.name;
+            showShop(firstName);
         })
         .catch(() => {
             setLoginLoading(false);
             document.getElementById('login-error').textContent = '❌ Connection error. Try again.';
         });
 }
-function showShop(firstName, balance) {
+function showShop(firstName) {
     document.getElementById('login-wrap').style.display = 'none';
     document.getElementById('shop-section').style.display = 'block';
     document.getElementById('top-bar').style.display = 'block';
     document.getElementById('bar-name').textContent = '🎄 ' + firstName;
-    updateTopBar();
 }
 function logout() {
     if (!confirm('Switch user / logout?')) return;
@@ -746,163 +692,46 @@ function logout() {
     location.reload();
 }
 
-// TOP BAR
-function updateTopBar() {
-    const spent = cartTotal();
-    const remaining = currentBalance - spent;
-    const pct = Math.max(0, Math.min(100, (remaining / BUDGET) * 100));
-    document.getElementById('bar-used').textContent = remaining;
-    document.getElementById('bar-total').textContent = BUDGET;
-    document.getElementById('bar-fill').style.width = pct + '%';
-    document.getElementById('bar-fill').style.background = remaining <= 0 ? COLOR_DANGER : remaining <= 15 ? COLOR_WARN : COLOR_OK;
-    const totalQty = cart.reduce((s, i) => s + i.qty, 0);
-    const badge = document.getElementById('cart-count-badge');
-    const label = document.getElementById('cart-pill-label');
-    if (totalQty > 0) {
-        badge.style.display = 'flex'; badge.textContent = totalQty;
-        label.textContent = spent + ' cr';
-    } else {
-        badge.style.display = 'none';
-        label.textContent = 'Cart';
-    }
-}
-
-// CART
-function cartTotal() { return cart.reduce((s, i) => s + i.unitPrice * i.qty, 0); }
-function addToCart(id, unitPrice, name) {
+// CHOOSE + CONFIRM
+function chooseGift(id) {
+    const p = PRODUCTS.find(x => x.id === id);
     const size = document.getElementById('size_' + id).value;
-    const qty = Math.max(1, parseInt(document.getElementById('qty_' + id).value) || 1);
-    const existing = cart.find(i => i.id === id && i.size === size);
-    if (existing) { existing.qty += qty; } else { cart.push({ id, name, size, qty, unitPrice }); }
-    updateCardBadge(id);
-    updateTopBar();
-    const btn = document.getElementById('btn_' + id);
-    const orig = btn.innerText;
-    btn.classList.add('added'); btn.innerText = '✓ Added!';
-    setTimeout(() => { btn.classList.remove('added'); btn.innerText = orig; }, 1100);
-}
-function updateCardBadge(id) {
-    const totalQty = cart.filter(i => i.id === id).reduce((s, i) => s + i.qty, 0);
-    const badge = document.getElementById('badge_' + id);
-    if (badge) {
-        if (totalQty > 0) { badge.style.display = 'block'; badge.textContent = totalQty + ' in cart'; }
-        else { badge.style.display = 'none'; }
-    }
-}
-function refreshAllBadges() { PRODUCTS.forEach(p => updateCardBadge(p.id)); }
-
-// DRAWER
-function openCart() { renderDrawer(); document.getElementById('cart-overlay').style.display = 'block'; document.getElementById('cart-drawer').classList.add('open'); }
-function closeCart() { document.getElementById('cart-overlay').style.display = 'none'; document.getElementById('cart-drawer').classList.remove('open'); }
-function renderDrawer() {
-    const container = document.getElementById('drawer-items');
-    const total = cartTotal();
-    const remaining = currentBalance - total;
-    if (cart.length === 0) {
-        container.innerHTML = '<div class="drawer-empty"><span class="drawer-empty-icon">🎁</span><span>Your cart is empty</span></div>';
-    } else {
-        container.innerHTML = cart.map((item, idx) =>
-            '<div class="cart-item">' +
-                '<div class="cart-item-info">' +
-                    '<div class="cart-item-name">' + item.name + '</div>' +
-                    '<div class="cart-item-size">' + item.size + '</div>' +
-                '</div>' +
-                '<div class="cart-qty-stepper">' +
-                    '<button class="cart-qty-btn" onclick="changeCartQty(' + idx + ',-1)">&#8722;</button>' +
-                    '<span class="cart-qty-num">' + item.qty + '</span>' +
-                    '<button class="cart-qty-btn" onclick="changeCartQty(' + idx + ',1)">+</button>' +
-                '</div>' +
-                '<div class="cart-item-price">' + (item.unitPrice * item.qty) + ' cr</div>' +
-                '<button class="cart-item-remove" onclick="removeItem(' + idx + ')" title="Remove">&#215;</button>' +
-            '</div>'
-        ).join('');
-    }
-    const totalEl = document.getElementById('drawer-total');
-    totalEl.textContent = total + ' Credits';
-    totalEl.className = 'value' + (remaining < 0 ? ' over' : '');
-    const remLine = document.getElementById('remaining-line');
-    if (remaining < 0) {
-        remLine.textContent = '⚠️ ' + Math.abs(remaining) + ' credits over budget';
-        remLine.className = 'remaining-line danger';
-    } else if (remaining <= 15) {
-        remLine.textContent = 'Only ' + remaining + ' credits remaining';
-        remLine.className = 'remaining-line warn';
-    } else {
-        remLine.textContent = remaining + ' credits remaining after this order';
-        remLine.className = 'remaining-line';
-    }
-    document.getElementById('btn-confirm').disabled = (cart.length === 0 || remaining < 0);
-}
-function changeCartQty(idx, delta) {
-    if (cart[idx].qty + delta < 1) { removeItem(idx); return; }
-    cart[idx].qty = cart[idx].qty + delta;
-    refreshAllBadges(); updateTopBar(); renderDrawer();
-}
-function removeItem(idx) {
-    const id = cart[idx].id;
-    cart.splice(idx, 1);
-    updateCardBadge(id); updateTopBar(); renderDrawer();
-}
-function clearCart() { cart = []; refreshAllBadges(); updateTopBar(); renderDrawer(); }
-
-// ORDER MODAL
-function openOrderModal() {
-    document.getElementById('modal-items-list').innerHTML = cart.map(i =>
-        '<div class="modal-item-row">' +
-            '<span class="mname">' + i.qty + '× ' + i.name + ' (' + i.size + ')</span>' +
-            '<span class="mprice">' + (i.unitPrice * i.qty) + ' cr</span>' +
-        '</div>'
-    ).join('');
-    document.getElementById('modal-total-val').textContent = cartTotal() + ' Credits';
+    if (!size) { showToast('📏 Please choose your size first'); document.getElementById('size_' + id).focus(); return; }
+    pending = { name: p.name, colour: chosenColour[id], size };
+    document.getElementById('modal-items-list').innerHTML =
+        '<div class="modal-item-row"><span class="mname">Jacket</span><span class="mprice">' + p.name + '</span></div>' +
+        '<div class="modal-item-row"><span class="mname">Colour</span><span class="mprice">' + pending.colour + '</span></div>' +
+        '<div class="modal-item-row"><span class="mname">Size</span><span class="mprice">' + pending.size + '</span></div>';
     document.getElementById('order-modal').classList.add('show');
 }
 function closeOrderModal() { document.getElementById('order-modal').classList.remove('show'); }
 
-// SUBMIT
 function submitOrder() {
-    const total = cartTotal();
-    if (total > currentBalance) { showToast('😥 Not enough credits!'); return; }
+    if (!pending) return;
     const email = localStorage.getItem('userEmail');
-    const details = cart.map(i => i.qty + 'x ' + i.name + ' (' + i.size + ')').join(', ');
-    lastOrderSummary = { items: [...cart], total, email, date: new Date().toLocaleDateString() };
-    closeOrderModal(); closeCart();
-    const placeBtn = document.querySelector('.btn-place');
-    if (placeBtn) { placeBtn.disabled = true; placeBtn.textContent = '⏳ Placing order...'; }
-    fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ email, item: details, price: total }) })
+    const details = '1x ' + pending.name + ' (' + pending.colour + ', ' + pending.size + ')';
+    const btn = document.querySelector('.btn-place');
+    btn.disabled = true; btn.textContent = '⏳ Sending...';
+    fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ email, item: details, price: GIFT_PRICE }) })
         .then(r => r.text())
         .then(res => {
-            const pb = document.querySelector('.btn-place');
-            if (pb) { pb.disabled = false; pb.textContent = 'Place Order 🎁'; }
-            if (res === "SUCCESS") {
-                currentBalance -= total;
-                clearCart();
-                showSuccessScreen();
-            } else { showToast('❌ Error: ' + res); }
+            btn.disabled = false; btn.textContent = 'Confirm my jacket 🎁';
+            if (res === "SUCCESS") { closeOrderModal(); showSuccessScreen(); }
+            else { showToast('❌ Error: ' + res); }
         })
         .catch(() => {
-            const pb = document.querySelector('.btn-place');
-            if (pb) { pb.disabled = false; pb.textContent = 'Place Order 🎁'; }
+            btn.disabled = false; btn.textContent = 'Confirm my jacket 🎁';
             showToast('❌ Connection error. Try again.');
         });
 }
 
-// SUCCESS
 function showSuccessScreen() {
-    if (!lastOrderSummary) return;
-    const s = lastOrderSummary;
+    const s = pending;
     document.getElementById('success-summary').innerHTML =
-        s.items.map(i => '<div class="ss-row"><span class="ss-label">' + i.qty + '× ' + i.name + ' (' + i.size + ')</span><span class="ss-val">' + (i.unitPrice * i.qty) + ' cr</span></div>').join('') +
-        '<div class="ss-row" style="margin-top:8px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.12);">' +
-            '<span class="ss-label">Total spent</span><span class="ss-val" style="color:' + COLOR_GOLD + ';">' + s.total + ' Credits</span>' +
-        '</div><div class="ss-row">' +
-            '<span class="ss-label">Remaining balance</span><span class="ss-val">' + currentBalance + ' Credits</span>' +
-        '</div>';
+        '<div class="ss-row"><span class="ss-label">Jacket</span><span class="ss-val">' + s.name + '</span></div>' +
+        '<div class="ss-row"><span class="ss-label">Colour</span><span class="ss-val">' + s.colour + '</span></div>' +
+        '<div class="ss-row"><span class="ss-label">Size</span><span class="ss-val" style="color:' + COLOR_GOLD + ';">' + s.size + '</span></div>';
     document.getElementById('success-screen').classList.add('show');
-    updateTopBar();
-}
-function closeSuccessScreen() {
-    document.getElementById('success-screen').classList.remove('show');
-    lastOrderSummary = null;
 }
 </script>
 </body>
