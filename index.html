@@ -629,8 +629,9 @@ const JACKETS = [
         sizes: ['S','M','L','XL','XXL','3XL','4XL','5XL'],
         colours: ['Khaki','Navy','Black'],
         description: 'Hooded softshell jacket with zip pockets. Men\'s fit.',
-        images: [ img('M_K.jpg'), img('M_N.jpg'), img('M_B.jpg') ],
-        colourImage: { Khaki: 0, Navy: 1, Black: 2 },
+        images: [ img('M_B.jpg'), img('M_K.jpg'), img('M_N.jpg') ],
+        colourImage: { Black: 0, Khaki: 1, Navy: 2 },
+        defaultColour: 'Black',
         sizeChart: img('Male_size table.png'),
     },
 ];
@@ -740,9 +741,10 @@ function carouselHTML(p) {
         next + dots + zoom + '</div>';
 }
 function swatchesHTML(p) {
-    chosenColour[p.id] = p.colours[0];
-    return '<div class="swatches" role="group" aria-label="Colour">' + p.colours.map((c, i) =>
-        '<button class="swatch" aria-pressed="' + (i===0) + '" onclick="pickColour(\'' + p.id + '\',\'' + c + '\',this)">' +
+    const def = p.defaultColour || p.colours[0];
+    chosenColour[p.id] = def;
+    return '<div class="swatches" role="group" aria-label="Colour">' + p.colours.map(c =>
+        '<button class="swatch" aria-pressed="' + (c===def) + '" onclick="pickColour(\'' + p.id + '\',\'' + c + '\',this)">' +
         '<span class="dot" style="background:' + COLOURS[c] + '"></span>' + c + '</button>'
     ).join('') + '</div>';
 }
